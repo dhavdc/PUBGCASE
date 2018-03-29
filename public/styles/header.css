@@ -15,11 +15,15 @@
     border: 5px solid #49545F;
 }
 .casenav{
-    border: 3px solid #49545F;
+
 }
 
 body{
     font-family: 'Sarpanch', sans-serif;
     font-weight: 900;
-    background-color: #EF9A4A;
+    font-size: 20px;
+    background-color: #212529;
+}
+.secondbar{
+    margin-top: 20px;
 }
