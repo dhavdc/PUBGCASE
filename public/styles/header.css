@@ -1,0 +1,25 @@
+.navbar-nav>li {
+   
+}
+
+.navbar-brand {
+
+}
+
+.bg-main-scheme{
+    background-color: #84BF5A;
+    
+}
+.bg-second-scheme{
+    background-color: #84BF5A;
+    border: 5px solid #49545F;
+}
+.casenav{
+    border: 3px solid #49545F;
+}
+
+body{
+    font-family: 'Sarpanch', sans-serif;
+    font-weight: 900;
+    background-color: #EF9A4A;
+}
