@@ -41,6 +41,9 @@ app.get('/', (req, res) => {
         message: "This is a message on handlebars!"
     });
 });
+app.get('/clothes1', (req, res) => {
+    res.render('clothes1');
+})
 var port = process.env.PORT || 8080;
 app.listen(port);
 console.log("Server has started");

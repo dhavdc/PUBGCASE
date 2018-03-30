@@ -7,23 +7,53 @@
 }
 
 .bg-main-scheme{
-    background-color: #84BF5A;
+    background-color: #2eaef9;
     
 }
 .bg-second-scheme{
-    background-color: #84BF5A;
+    background-color: #2eaef9;
     border: 5px solid #49545F;
 }
 .casenav{
 
 }
-
+.navbar-nav > li > a:hover {
+    color:red !important;
+    color:white !important;
+    background-color: #0a95f9;
+}
 body{
     font-family: 'Sarpanch', sans-serif;
     font-weight: 900;
-    font-size: 20px;
     background-color: #212529;
 }
 .secondbar{
     margin-top: 20px;
+    width: 800px;
+}
+.selected{
+    background-color: #0a95f9;
+}
+.nav-item{
+    padding-top: 10px;
+    height: 60px;
+}
+.font-white{
+    color:white !important;
+}
+.navbar{
+    max-height: 60px;
+}
+.blue-background{
+    background-color: #2eaef9;
+}
+.main-jumbo{
+    margin-top: 150px;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
