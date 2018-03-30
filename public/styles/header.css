@@ -25,7 +25,8 @@
 body{
     font-family: 'Sarpanch', sans-serif;
     font-weight: 900;
-    background-color: #212529;
+    background-image: url("/assets/background1.jpg");
+    background-size: 100% auto;
 }
 .secondbar{
     margin-top: 20px;
@@ -56,4 +57,19 @@ body{
     margin-left: auto;
     margin-right: auto;
     width: 50%;
+}
+
+.case-container{
+    margin-top: 4%;
+    display: block;
+}
+.display-1{
+    margin-top: 2.3%;
+}
+.card{
+    background-color:#2eaef9;
+}
+.img-thumbnail{
+    background-color: transparent;
+    border: 3px solid #49545F;
 }
