@@ -1,0 +1,20 @@
+<% include partials/header %>
+
+    <% include partials/secondbar %>
+        <h1 class="display-2 font-white text-center">
+            <%=title%>
+        </h1>
+        <div class="container text-center">
+            <div class="owl-carousel mx-auto">
+            </div>
+            <button class="btn btn-primary btnJump">OPEN NOW</button>
+            <h1 class="win-text"></h1>
+        </div>
+        <script>
+            let winnerItem = <%=winnerItem%>
+        </script>
+        <script src="/scripts/itemvalues/<%=category%>.js"></script>
+        <script src="/scripts/opencase.js"></script>
+
+
+        <% include partials/footer %>
