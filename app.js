@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 app.get('/clothes1', (req, res) => {
     res.render('clothes1');
 });
-app.get('/clothes1/open', (req, res) => {
+app.get('/hatcase/open', (req, res) => {
     let winnerItem = Math.floor(Math.random() * 5) + 1;
     res.render('open', {
         category: "hats",
