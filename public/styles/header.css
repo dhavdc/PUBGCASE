@@ -90,3 +90,6 @@ body{
 .win-text{
     margin-top: 20px;
 }
+.ccontainer{
+    min-height: 360px;
+}

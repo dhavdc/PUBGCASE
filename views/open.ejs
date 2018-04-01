@@ -2,19 +2,22 @@
 
     <% include partials/secondbar %>
         <h1 class="display-2 font-white text-center">
-            <%=title%>
+            <%=Items[0].casename%>
         </h1>
         <div class="container text-center">
+                    <div class=ccontainer>
             <div class="owl-carousel mx-auto">
+            </div>
             </div>
             <button class="btn btn-primary btnJump">OPEN NOW</button>
             <h1 class="win-text"></h1>
         </div>
         <script>
             let winnerItem = <%=winnerItem%>
+            let ItemsObject = <%=Items[0].items%>
         </script>
-        <script src="/scripts/itemvalues/<%=category%>.js"></script>
-        <script src="/scripts/opencase.js"></script>
+        <script src="/scripts/itemvalues/<%=Items[0].items[0].category%>.js"></script>
+        <script src="/scripts/helpers/opencase.js"></script>
 
 
         <% include partials/footer %>

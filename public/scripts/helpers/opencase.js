@@ -1,7 +1,7 @@
 
 let randomAppend = () => {
 	let random = Math.floor(Math.random() * 12) + 1;
-	let randomimage = Append + random + ".png";
+	let randomimage = ItemsObject.items[random].image;
 	var $newdiv = $('<div class="card item"><img src="' + randomimage + '"width="300px" height="300px"></div>');
 	$('.owl-carousel').append($newdiv);
 
@@ -15,7 +15,7 @@ for (i = 0; i < 30; i++) {
 	randomAppend();
 }
 
-let winImage = Append + winnerItem + ".png";
+let winImage = ItemsObject.items[winnerItem].image;
 var $windiv = $('<div class="card item win-item"><img src="' + winImage + '"width="300px" height="300px"></div>');
 $('.owl-carousel').append($windiv);
 randomAppend();
