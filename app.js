@@ -36,17 +36,18 @@ const updatePrice = require ('./public/scripts/helpers/priceupdater');
 var favicon = require('serve-favicon');
 //Clothes = require("./models/clothes"),
 
-mongoose.connect("mongodb://localhost/airdrop"); //LOCAL testing
+//mongoose.connect("mongodb://localhost/airdrop"); //LOCAL testing
+mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
 
 const app = express();
 
 app.use(express.static("public"));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.set("view engine", "ejs");
-//seedDB();
+seedDB();
 
   
-//updatePrice(10 * 60000 );
+updatePrice(10 * 60000 );
 
 
 app.get('/', (req, res) => {
