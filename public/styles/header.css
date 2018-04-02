@@ -93,3 +93,22 @@ body{
 .ccontainer{
     min-height: 360px;
 }
+
+.rarity-1{
+    background-color: gray;
+}
+.rarity-2{
+    background-color: green;
+}
+.rarity-3{
+    background-color: blue;
+}
+.rarity-4{
+    background-color: purple;
+}
+.rarity-5{
+    background-color: pink;
+}
+.rarity-6{
+    background-color: red;
+}

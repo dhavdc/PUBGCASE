@@ -5,6 +5,7 @@ const mongoose = require ('mongoose');
 
 let caseSchema = new mongoose.Schema({
     casename: String,
+    price: Number,
     items:[{
         name: String,
         image: String,

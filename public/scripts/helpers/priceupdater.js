@@ -1,5 +1,5 @@
 const market = require('steam-market-pricing');
-const ClothesItems = require('../../../models/clothes');
+const Case = require('../../../models/case');
 
 
 //marketprice.getItemPrices(578080, 'Cowboy Hat (White)');
@@ -14,22 +14,22 @@ async function getPrice(marketname) { //Later maybe request all items at same ti
 /* jshint ignore:end */
 
 update = () => {
-    ClothesItems.find({}, function (err, allClothes) {
+    Case.find({}, function (err, allSkins) {
         if (err) {
             console.log(err);
         } else {
-            console.log(allClothes);
-            for (i = 0; i < allClothes.length; i++) {
-                console.log(allClothes[i].market_hash_name);
-                let response = getPrice(allClothes[i].market_hash_name);
-                let id = allClothes[i]._id;
+            console.log(allSkins);
+            for (i = 0; i < allSkins[0].items.length; i++) {
+                console.log(allSkins[0].items[i].market_hash_name);
+                let response = getPrice(allSkins[0].items[i].market_hash_name);
+                let id = allSkins[0].items[i]._id;
                 response.then(function (item) {
                     let price = (item.median_price);
-                    ClothesItems.update({
-                            _id: id
+                    Case.update({
+                            'items._id': id
                         }, {
                             $set: {
-                                price: price
+                                'items.$.price': price
                             }
                         },
                         err => {
@@ -37,6 +37,10 @@ update = () => {
                                 console.log(err);
                             }
                         });
+                });
+                response.catch(error => {
+                    console.log(error);
+
                 });
             }
         }
