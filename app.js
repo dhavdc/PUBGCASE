@@ -44,10 +44,10 @@ const app = express();
 app.use(express.static("public"));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.set("view engine", "ejs");
-seedDB();
+//seedDB();
 
   
-//updatePrice(10 * 60000 );
+updatePrice(10 * 60000 );
 
 
 app.get('/', (req, res) => {
