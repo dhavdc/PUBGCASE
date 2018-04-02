@@ -47,7 +47,7 @@ app.set("view engine", "ejs");
 seedDB();
 
   
-updatePrice(10 * 60000 );
+//updatePrice(10 * 60000 );
 
 
 app.get('/', (req, res) => {
