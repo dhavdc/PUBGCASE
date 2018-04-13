@@ -4,7 +4,7 @@ const Append = "/assets/clothes/hats/hat";
 
 let winningString = ''; //Ok eventually use a database schema and fetch the name of the winning item based on roll
 //You got a + ItemName
-switch (winnerItem) {
+switch (winner) {
 	case 1:
 		winningString = "You got a Cowboy Hat (White)!";
 		break;

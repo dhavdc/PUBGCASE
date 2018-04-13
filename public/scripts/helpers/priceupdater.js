@@ -12,6 +12,7 @@ async function getPrice(marketname) { //Later maybe request all items at same ti
     //return response.median_price;
 }
 /* jshint ignore:end */
+//ADD UPDATES TO SELL PRICES TOO!
 
 update = () => {
     Case.find({}, function (err, allSkins) {

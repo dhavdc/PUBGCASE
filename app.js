@@ -1,88 +1,251 @@
-// const SteamUser = require("steam-user");
-// const SteamTotp = require("steam-totp");
-// const SteamCommunity = require("steamcommunity");
-// const TradeOfferManager = require("steam-tradeoffer-manager");
-
-// const client = new SteamUser();
-// const community = new SteamCommunity();
-// const manager = new TradeOfferManager({
-//     steam: client,
-//     community: community,
-//     language: 'en'
-// });
-
-// const logOnOptions = {
-//     accountName: 'kushpushups',
-//     password: 'T9w67b53a12a$s!5831',
-//     twoFactorCode: SteamTotp.generateAuthCode('skrt')
-// };
-
-// client.logOn(logOnOptions);
-
-// client.on("loggedOn", () => {
-//     console.log("Logged into steam!");
-//     client.setPersona(SteamUser.Steam.EPersonaState.Online);
-//     client.gamesPlayed(730);
-// });
-
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const clothesItems = require ('./models/clothes');
+const clothesItems = require('./models/clothes');
 const Case = require('./models/case');
-const seedDB = require ('./public/scripts/database/seed');
+const Skins = require('./models/skins');
+const User = require('./models/user');
+const seedDB = require('./public/scripts/database/seed');
 const calculateWin = require('./public/scripts/helpers/calculatewin');
-const updatePrice = require ('./public/scripts/helpers/priceupdater');
+const updatePrice = require('./public/scripts/helpers/priceupdater');
+const passport = require('passport');
+const session = require('express-session'); //
+const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo')(session);
+const passportSocket = require('passport.socketio');
+const SteamStrategy = require('passport-steam').Strategy;
 var favicon = require('serve-favicon');
+let steamid = null;
 //Clothes = require("./models/clothes"),
 
-//mongoose.connect("mongodb://localhost/airdrop"); //LOCAL testing
-mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
-
 const app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+const sessionStore = new MongoStore({
+  mongooseConnection: mongoose.connection
+});
+
+
+
+mongoose.connect("mongodb://localhost/airdrop"); //LOCAL testing
+//mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
+
+
+
+
+
+
+//seedDB();
+
+passport.use(
+  new SteamStrategy({
+      returnURL: 'http://localhost:8080/auth/steam/return',
+      realm: 'http://localhost:8080/',
+      apiKey: '6A4B53A2FD620DE1B7DA7D3E448712D2'
+    },
+    (identifier, profile, done) => {
+      steamid = identifier.match(/\d+$/)[0];
+
+      User.findOne({
+        steamid: steamid
+      }, function (err, user) {
+        if (user) {
+          console.log("User already exists");
+          return done(err, profile);
+        } else {
+          const user = new User({
+            steamid: steamid,
+            tradeurl: '',
+            credits: 0,
+            items: []
+          });
+          user.save((err, user) => {
+            if (err) {
+              console.log(err);
+            } else {
+              return done(err, profile);
+            }
+          });
+        }
+      });
+    }
+  )
+);
+
+
+
+passport.serializeUser((user, done) => {
+  done(null, user._json);
+});
+
+passport.deserializeUser((obj, done) => {
+  done(null, obj);
+});
+
+io.use(
+  passportSocket.authorize({
+    cookieParser: cookieParser,
+    key: 'U_SESSION',
+    secret: 'hello',
+    store: sessionStore
+  })
+);
+
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('addWinnerItem', function(item){
+    let winnerName = item; //Set winnerName to market_hash_name from client
+    console.log(winnerName);
+    Skins.findOne({'market_hash_name': winnerName}, (err, skin) => {
+      if (err){
+        console.log(err);
+      }
+      else{
+        console.log(skin);
+        console.log(steamid);
+          User.update({
+            'steamid': steamid
+        }, {
+            $push: {
+                'items': skin
+            }
+        },
+        err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+      }
+    });
+  });
+});
 
 app.use(express.static("public"));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.set("view engine", "ejs");
-//seedDB();
 
-  
-updatePrice(10 * 60000 );
+
+app.use(
+  session({
+    secret: 'hello',
+    name: 'U_SESSION',
+    resave: true,
+    saveUninitialized: true,
+    store: sessionStore
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(cookieParser());
+
 
 
 app.get('/', (req, res) => {
-    res.render('home', {
-        title: "Hello World",
-        message: "This is a message on handlebars!"
-    });
+  res.render('home', {
+    user: req.user,
+  });
 });
-app.get('/clothes1', (req, res) => {
-    res.render('clothes1');
+
+
+
+app.get(
+  /^\/auth\/steam(\/return)?$/,
+  passport.authenticate('steam', {
+    failureRedirect: '/wtf'
+  }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
+
+app.get('/inventory', (req, res) => {
+  res.render('inventory', {
+    user: req.user
+  });
+
+});
+
+
+app.get('/clothes', (req, res) => {
+  res.render('clothes', {
+    user: req.user
+  });
+});
+app.get('/skins', (req, res) => {
+  res.render('skins', {
+    user: req.user
+  });
+});
+app.get('/open', (req, res) => {
+  let casename = req.query.casename;
+  calculateWin(casename, function (result) {
+    let calcObject = result;
+    //console.log(result);
+    let winnerItem = calcObject.winnerNum;
+    let randomArray = calcObject.randomArray;
+    Case.find({
+      casename: casename
+    }, (err, allItems) => {
+      if (err) {
+        //console.log(err);
+      } else {
+       // console.log(allItems);
+        res.send({
+          Items: allItems,
+          winnerItem: winnerItem,
+          randomArray: randomArray,
+          user: req.user
+        });
+      }
+    });
+  });
+});
+
+app.get('/addWinnerItem', (req, res) => {
+ 
+
 });
 app.get('/hatcase/open', (req, res) => {
-
-    calculateWin("Hat Case", function(result){
-        let calcObject = result;
-        console.log(result);
-        let winnerItem = calcObject.winnerNum;
-        let randomArray = calcObject.randomArray;
-        Case.find({casename: "Hat Case"}, (err, allItems) => {
-            if (err){
-              console.log(err);
-            } else{
-                console.log(allItems);
-              res.render("open", {Items: allItems, winnerItem: winnerItem, randomArray: randomArray});
-            }
-          });
-        
+  if (req.user){
+    res.render("open", {
+      casename: "Hat Case",
+      user: req.user,
+      stringpath: '/scripts/itemvalues/hat.js'
     });
-   
-    // res.render('open', {
-    //     category: "hats",
-    //     winnerItem: winnerItem,
-    //     title: "Hats Case"
-    // });
+  }
+  else{
+    res.render('loggedin', {user: req.user});
+  }
+  
+
+  // res.render('open', {
+  //     category: "hats",
+  //     winnerItem: winnerItem,
+  //     title: "Hats Case"
+  // });
+});
+app.get('/poorriflecase/open', (req, res) => {
+  res.render("open", {
+    casename: "Poor Rifle Case",
+    user: req.user,
+    stringpath: '/scripts/itemvalues/hat.js'
+  });
+
+  // res.render('open', {
+  //     category: "hats",
+  //     winnerItem: winnerItem,
+  //     title: "Hats Case"
+  // });
+});
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
 });
 var port = process.env.PORT || 8080;
-app.listen(port);
-console.log("Server has started");
+http.listen(port, () => {
+  console.log("Server started");
+});
+

@@ -2,23 +2,31 @@
 
     <% include partials/secondbar %>
         <h1 class="display-2 font-white text-center">
-            <%=Items[0].casename%>
+            <%=casename%>
         </h1>
         <div class="container text-center">
-                    <div class=ccontainer>
-            <div class="owl-carousel mx-auto">
+            <div class=ccontainer>
+                <div class="main-carousel mx-auto"></div>
             </div>
+                            <button class="open-button btn btn-primary btnJump">OPEN NOW</button>
+
+            <div class="container item-showcase">
+                <div class="row row1">
+                    
+                </div>
+                <div class="row row2">
+
+                </div>
             </div>
-            <button class="btn btn-primary btnJump">OPEN NOW</button>
             <h1 class="win-text"></h1>
         </div>
         <script>
-            let ItemsObject = <%-JSON.stringify(Items)%>
-            let winnerItem = <%=winnerItem%>
-            let randomArray = [<%=randomArray%>]
+            let caseNameOBJ = '<%=casename%>';
         </script>
-        <script src="/scripts/itemvalues/<%=Items[0].items[0].category%>.js"></script>
-        <script src="/scripts/helpers/opencase.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
+        <script src="/scripts/helpers/opencase2.js"></script>
+
+
 
 
         <% include partials/footer %>
