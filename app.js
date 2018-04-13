@@ -39,8 +39,8 @@ seedDB();
 
 passport.use(
   new SteamStrategy({
-      returnURL: 'http://localhost:8080/auth/steam/return',
-      realm: 'http://localhost:8080/',
+      returnURL: 'https://pubgcase.herokuapp.com/auth/steam/return',
+      realm: 'https://pubgcase.herokuapp.com/',
       apiKey: '6A4B53A2FD620DE1B7DA7D3E448712D2'
     },
     (identifier, profile, done) => {
