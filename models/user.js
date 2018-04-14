@@ -7,14 +7,7 @@ let userSchema = new mongoose.Schema({
     steamid: String,
     tradeurl: String,
     credits: Number,
-    items:[{
-        name: String,
-        image: String,
-        price: String,
-        category: String,
-        rarity: Number,
-        market_hash_name: String
-    }]
+    items:[]
    
 });
 

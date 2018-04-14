@@ -27,20 +27,16 @@ const sessionStore = new MongoStore({
 
 
 
-//mongoose.connect("mongodb://localhost/airdrop"); //LOCAL testing
-mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
+mongoose.connect("mongodb://localhost/airdrop"); //LOCAL testing
+//mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
 
 
-
-
-
-
-seedDB();
+//seedDB();
 
 passport.use(
   new SteamStrategy({
-      returnURL: 'https://pubgcase.herokuapp.com/auth/steam/return',
-      realm: 'https://pubgcase.herokuapp.com/',
+      returnURL: 'http://localhost:8080/auth/steam/return',
+      realm: 'http://localhost:8080/',
       apiKey: '6A4B53A2FD620DE1B7DA7D3E448712D2'
     },
     (identifier, profile, done) => {
@@ -79,6 +75,8 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((obj, done) => {
+  steamid = obj.steamid;
+  console.log(steamid);
   done(null, obj);
 });
 
@@ -92,32 +90,33 @@ io.use(
 );
 
 
-io.on('connection', function(socket){
+io.on('connection', function (socket) {
   console.log('a user connected');
-  socket.on('addWinnerItem', function(item){
+  socket.on('addWinnerItem', function (item) {
     let winnerName = item; //Set winnerName to market_hash_name from client
     console.log(winnerName);
-    Skins.findOne({'market_hash_name': winnerName}, (err, skin) => {
-      if (err){
-        console.log(err);
-      }
-      else{
-        console.log(skin);
-        console.log(steamid);
-          User.update({
-            'steamid': steamid
-        }, {
-            $push: {
-                'items': skin
-            }
-        },
-        err => {
-            if (err) {
-                console.log(err);
-            }
-        });
-      }
-    });
+    // Skins.findOne({'market_hash_name': winnerName}, (err, skin) => {
+    //   if (err){
+    //     console.log(err);
+    //   }
+    //   else{
+    //     const skin_hash_name = skin.
+    //     console.log(skin);
+    //     console.log(steamid);
+    //   }
+    // });
+    User.update({
+        'steamid': steamid
+      }, {
+        $push: {
+          'items': winnerName
+        }
+      },
+      err => {
+        if (err) {
+          console.log(err);
+        }
+      });
   });
 });
 
@@ -143,6 +142,8 @@ app.use(cookieParser());
 
 
 app.get('/', (req, res) => {
+  req.session.steamid = steamid;
+  console.log(req.session.steamid);
   res.render('home', {
     user: req.user,
   });
@@ -191,7 +192,7 @@ app.get('/open', (req, res) => {
       if (err) {
         //console.log(err);
       } else {
-       // console.log(allItems);
+        // console.log(allItems);
         res.send({
           Items: allItems,
           winnerItem: winnerItem,
@@ -204,21 +205,22 @@ app.get('/open', (req, res) => {
 });
 
 app.get('/addWinnerItem', (req, res) => {
- 
+
 
 });
 app.get('/hatcase/open', (req, res) => {
-  if (req.user){
+  if (req.user) {
     res.render("open", {
       casename: "Hat Case",
       user: req.user,
       stringpath: '/scripts/itemvalues/hat.js'
     });
+  } else {
+    res.render('loggedin', {
+      user: req.user
+    });
   }
-  else{
-    res.render('loggedin', {user: req.user});
-  }
-  
+
 
   // res.render('open', {
   //     category: "hats",
@@ -248,4 +250,3 @@ var port = process.env.PORT || 8080;
 http.listen(port, () => {
   console.log("Server started");
 });
-
