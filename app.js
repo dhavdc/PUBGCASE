@@ -27,16 +27,16 @@ const sessionStore = new MongoStore({
 
 
 
-mongoose.connect("mongodb://localhost/airdrop"); //LOCAL testing
-//mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
+//mongoose.connect("mongodb://localhost/airdrop"); //LOCAL testing
+mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
 
 
 //seedDB();
 
 passport.use(
   new SteamStrategy({
-      returnURL: 'http://localhost:8080/auth/steam/return',
-      realm: 'http://localhost:8080/',
+      returnURL: 'https:/pubgcase.herokuapp.com/auth/steam/return',
+      realm: 'https:/pubgcase.herokuapp.com',
       apiKey: '6A4B53A2FD620DE1B7DA7D3E448712D2'
     },
     (identifier, profile, done) => {
