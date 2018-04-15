@@ -35,8 +35,8 @@ mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
 
 passport.use(
   new SteamStrategy({
-      returnURL: 'https:/pubgcase.herokuapp.com/auth/steam/return',
-      realm: 'https:/pubgcase.herokuapp.com',
+      returnURL: 'https://pubgcase.herokuapp.com/auth/steam/return',
+      realm: 'https://pubgcase.herokuapp.com',
       apiKey: '6A4B53A2FD620DE1B7DA7D3E448712D2'
     },
     (identifier, profile, done) => {
