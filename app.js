@@ -121,7 +121,6 @@ io.on('connection', function (socket) {
 });
 
 app.use(express.static("public"));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.set("view engine", "ejs");
 
 
@@ -138,6 +137,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+
 
 
 
