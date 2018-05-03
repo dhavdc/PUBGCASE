@@ -28,11 +28,14 @@ const sessionStore = new MongoStore({
 
 
 //mongoose.connect("mongodb://localhost/airdrop"); //LOCAL testing
-mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
+mongoose.connect("mongodb://test:test@ds113700.mlab.com:13700/airdrop2");
+//mongoose.connect("mongodb://test:test@ds023463.mlab.com:23463/airdrop");
 
+updatePrice(300000);
 
-//seedDB();
-
+seedDB();
+//https://pubgcase.herokuapp.com/auth/steam/return
+//https://localhost:8080
 passport.use(
   new SteamStrategy({
       returnURL: 'https://pubgcase.herokuapp.com/auth/steam/return',
@@ -76,8 +79,14 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((obj, done) => {
   steamid = obj.steamid;
-  console.log(steamid);
-  done(null, obj);
+  User.findOne(
+    {
+      'steamid': obj.steamid
+    },
+    (err, user) => {
+      done(err, user);
+    }
+  );
 });
 
 io.use(
@@ -164,10 +173,38 @@ app.get(
 );
 
 app.get('/inventory', (req, res) => {
-  res.render('inventory', {
-    user: req.user
-  });
-
+  var invArray = [];
+  let render = (invArray) => {
+    res.render('inventory', {
+      user: req.user,
+      Items: invArray
+    });
+  };
+  if (req.user) {
+    User.find({
+      'steamid': steamid
+    }, (err, user) => {
+      if (user) {
+        console.log(user);
+        let itemArray = user[0].items;
+        let query = [];
+        for (i=0;i<itemArray.length;i++){
+          console.log(i);
+          query.push(Skins.findOne({
+            'market_hash_name': itemArray[i]
+          }));
+        }  
+        Promise.all(query).then(function (skins){
+          console.log(skins);
+          render(skins);
+        });
+      }
+    });
+  }
+  else{
+    res.render('loggedin', 
+  {user: req.user});
+  }
 });
 
 
@@ -180,6 +217,10 @@ app.get('/skins', (req, res) => {
   res.render('skins', {
     user: req.user
   });
+});
+app.get('/retreiveInv', (req, res) => {
+
+
 });
 app.get('/open', (req, res) => {
   let casename = req.query.casename;
@@ -206,10 +247,11 @@ app.get('/open', (req, res) => {
   });
 });
 
-app.get('/addWinnerItem', (req, res) => {
 
+// app.get('/sell', (req, res) => {
+//   let item = req.
 
-});
+// });
 app.get('/hatcase/open', (req, res) => {
   if (req.user) {
     res.render("open", {

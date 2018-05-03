@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@opskins/api": "^1.5.1",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.8",
@@ -26,6 +27,7 @@
     "passport-steam": "^1.0.9",
     "passport.socketio": "^3.7.0",
     "pick-weight": "^1.0.0",
+    "request": "^2.85.0",
     "serve-favicon": "^2.4.5",
     "slick-carousel": "^1.8.1",
     "socket.io": "^2.1.0",

@@ -159,11 +159,3 @@ function sleep(time) {
 
 
 console.log("WINNER: " + winnerG);
-
-
-$(document).ready(function () {
-
-
-
-
-});

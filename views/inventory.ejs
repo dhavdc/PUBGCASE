@@ -1,0 +1,33 @@
+<% include partials/header %>
+    <h1 class="inventory-title text-center white-text">Inventory</h1>
+    <div class="inventory-container container">
+        <div class="row">
+            <% for (let i=0;i<Items.length;i++){ %>
+                <div class="col-2 padding-0">
+                    <div class="card card-inventory" style="width: 100%;">
+                        <img class="card-img-top rarity-<%=Items[i].rarity%>" src="<%=Items[i].image%>" height="150px">
+                        <p class="card-title showcase-title text-center">
+                            <%=Items[i].market_hash_name%>
+                        </p>
+                        <button type="button" class="btn btn-danger sell-button">Sell (Ð<%=Items[i].sellPrice%>)</button>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <% include partials/footer %>

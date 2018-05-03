@@ -99,7 +99,7 @@ let getData = () => {
                 let itemImage = dataOBJ.Items[0].items[i].image;
                 let itemRarity = dataOBJ.Items[0].items[i].rarity;
                 let $itemcard = $('<div class="col padding-0"><div class="card" style="width: 100%;">' + 
-                '<img class="card-img-top rarity-' + itemRarity + '" src="' + itemImage + '"height="150px"><p class="card-title showcase-title">' + itemName +  '</p>' +
+                '<img class="card-img-top card-showcase rarity-' + itemRarity + '" src="' + itemImage + '"height="150px"><p class="card-title showcase-title">' + itemName +  '</p>' +
                 '</div></div>');
                 if (i<6){
                     $('.row1').append($itemcard);

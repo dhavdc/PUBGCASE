@@ -1,49 +1,51 @@
 const market = require('steam-market-pricing');
 const Case = require('../../../models/case');
+const Skins = require('../../../models/skins');
+var OPSkinsAPI = require('@opskins/api');
+var opskins = new OPSkinsAPI('70b2464cd8f36ec809e363efcea3dd');
+var request = require('request');
 
 
 //marketprice.getItemPrices(578080, 'Cowboy Hat (White)');
 /* jshint ignore:start */
 
-async function getPrice(marketname) { //Later maybe request all items at same time so no timeout 
-    return await market.getItemPrice(578080, marketname).then(item => {
-        return item
-    });
-    //return response.median_price;
-}
 /* jshint ignore:end */
 //ADD UPDATES TO SELL PRICES TOO!
 
-update = () => {
-    Case.find({}, function (err, allSkins) {
+
+
+let update = () => {
+    Skins.find({}, function (err, allSkins) {
         if (err) {
             console.log(err);
         } else {
-            console.log(allSkins);
-            for (i = 0; i < allSkins[0].items.length; i++) {
-                console.log(allSkins[0].items[i].market_hash_name);
-                let response = getPrice(allSkins[0].items[i].market_hash_name);
-                let id = allSkins[0].items[i]._id;
-                response.then(function (item) {
-                    let price = (item.median_price);
-                    Case.update({
-                            'items._id': id
-                        }, {
-                            $set: {
-                                'items.$.price': price
-                            }
-                        },
-                        err => {
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
-                });
-                response.catch(error => {
-                    console.log(error);
+            opskins.getLowestPrices(578080, (err, prices) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(prices);
+                    for (i = 0; i < allSkins.length; i++) {
+                        let skin = allSkins[i].market_hash_name;
+                        let priceSkin = prices[skin].price;
+                        // console.log(allSkins[i].market_hash_name);
+                        //  let price = prices[i].market_value;
+                        //  console.log(price);
+                        Skins.update({
+                                'market_hash_name': skin
+                            }, {
+                                $set: {
+                                    'sellPrice': priceSkin
+                                }
+                            },
+                            err => {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
+                    }
+                }
+            });
 
-                });
-            }
         }
     });
 };
