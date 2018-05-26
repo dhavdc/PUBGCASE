@@ -1,3 +1,3 @@
 # Airdroploot
 
-[Working Demo](https://www.pubgcase.herokuapp.com)
+[Working Demo](https://pubgcase.herokuapp.com/)
