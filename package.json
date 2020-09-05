@@ -17,7 +17,7 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
     "flickity": "^2.1.1",
-    "handlebars": "^4.0.11",
+    "handlebars": "^4.5.3",
     "http": "0.0.0",
     "jshint": "^2.9.5",
     "mongodb": "^3.0.5",
